@@ -10,3 +10,7 @@
 ## Instalación
 
     pip install requirements
+
+## Método de uso
+
+    cd
