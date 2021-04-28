@@ -13,4 +13,4 @@
 
 ## Método de uso
 
-    cd
+    python manage.py runserver

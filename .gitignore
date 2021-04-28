@@ -5,3 +5,4 @@ reto2/__pycache__/settings.cpython-38.pyc
 reto2/__pycache__/urls.cpython-38.pyc
 reto2/__pycache__/wsgi.cpython-38.pyc
 reto2/pdfs
+reto2/scripts/readPdf.ipynb
