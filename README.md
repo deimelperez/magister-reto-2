@@ -11,6 +11,8 @@
 
     pip install requirements
 
+### It's necessary to have instaled java and added to path
+
 ## Método de uso
 
     python manage.py runserver

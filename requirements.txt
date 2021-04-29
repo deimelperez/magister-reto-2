@@ -1,0 +1,7 @@
+Django==3.2
+requests==2.25.1
+tabula_py==2.2.0
+pandas==1.2.4
+beautifulsoup4==4.9.3
+PyPDF2==1.26.0
+tabula==1.0.5
