@@ -111,8 +111,3 @@ def readExcluded():
     df_result = df_result[['D.N.I.','PRIMER APELLIDO','SEGUNDO APELLIDO', 'NOMBRE', 'D.A.T.', 'ACCESO','ESPECIALIDAD','L. INTER', 'EXCLUSIONES']]
     
     return df_result
-
-
-df = readExcluded()
-print(df.head())
-pass
