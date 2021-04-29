@@ -52,11 +52,11 @@ class Teachers(models.Model):
     language_test = models.BooleanField()
     admitted = models.BooleanField()
 
-    specialty = models.ForeignKey('Specialty',on_delete=models.CASCADE)
-    corp = models.ForeignKey('Corp',on_delete=models.CASCADE)
-    access = models.ForeignKey('Access',on_delete=models.CASCADE)
-    exclusion = models.ForeignKey('Exclusion',on_delete=models.CASCADE)
-    dat = models.ForeignKey('DAT',on_delete=models.CASCADE)
+    specialty = models.ForeignKey('Specialty',on_delete=models.SET_NULL)
+    corp = models.ForeignKey('Corp',on_delete=models.SET_NULL)
+    access = models.ForeignKey('Access',on_delete=models.SET_NULL)
+    exclusion = models.ForeignKey('Exclusion',on_delete=models.SET_NULL)
+    dat = models.ForeignKey('DAT',on_delete=models.SET_NULL)
 
 
     def __str__(self):
