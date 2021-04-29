@@ -1,6 +1,7 @@
 import requests 
 from bs4 import BeautifulSoup 
 import re
+import os
   
 ''' 
 URL of the archive web-page which provides link to 
@@ -41,7 +42,11 @@ def download_pdfs(pdf_links):
         # create response object 
         headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:39.0) Gecko/20100101 Firefox/39.0'}
         r = requests.get(link, headers=headers)
-          
+        if not os.path.exists('./reto2/pdfs/'):
+            os.mkdir('./reto2/pdfs/')
+        elif not os.path.isdir('./reto2/pdfs/'):
+            return #you may want to throw some error or so.
+        
         with open('./reto2/pdfs/'+file_name, 'wb') as f: 
             f.write(r.content)
           
@@ -57,3 +62,5 @@ if __name__ == "__main__":
     pdf_links = get_pdf_links() 
     # download all pdfs 
     download_pdfs(pdf_links) 
+
+   

@@ -5,13 +5,14 @@ import os
 
 
 # Reads Tables from files
-def readTables(path_file, start_page, table):
+def readTables(path_file, table,start_page, end_page=False):
     '''
         Return a list of pandas Data Frames with the tables
 
         path_file: Path to file
-        start_page: page where the tables start
         table: [top, left, bottom, width] in cm where the table is located
+        start_page: page where the tables start
+        end_page: page where the tables end
     '''
     # creating an object 
     file = open(path_file, 'rb')
@@ -20,7 +21,10 @@ def readTables(path_file, start_page, table):
     fileReader = PyPDF2.PdfFileReader(file)
 
     # get the number of pages in pdf file
-    numPages = fileReader.numPages 
+    if not end_page:
+        numPages = fileReader.numPages 
+    else:
+        numPages = end_page
 
     # creates list of pages
     arrPages = [i for i in range(start_page, numPages + 1)]
@@ -48,7 +52,7 @@ def readAdmitted():
         # Check if contains tables or not
         if 'ADMITIDOS' in file:      
             file_path = f"{path}\{file}"
-            df_result = df_result.append(other=readTables(file_path,2,[5,0,26,21]))
+            df_result = df_result.append(other=readTables(file_path,[5,0,26,21],2))
     
     # Combines columns that were misreaded with tabula
     df_result["NOMBRE"] = df_result["NOMBRE"].combine_first(df_result["NOMBRE L.INTE"])
@@ -63,17 +67,25 @@ def readAdmitted():
 
 def readExcluded():                   
     # Change the directory
-    os.chdir('./reto2/pdfs')
+    os.chdir('../pdfs')
     path = os.getcwd()
 
+    # Variable to get the exclusions description
+    readed = False
+
+
     df_result = pd.DataFrame()
+    df_exlusions = pd.DataFrame()
 
     # iterate through all file
     for file in os.listdir():
         # Check if contains tables or not
-        if 'EXCLU' in file:      
+        if 'EXCLU' in file:
             file_path = f"{path}\{file}"
-            df_result = df_result.append(other=readTables(file_path, 4, [4,0,19,28.5]))
+            if not readed:
+                df_exlusions = readTables(file_path, [3.5,0,19,29], 2, 3)
+                readed = True
+            df_result = df_result.append(other=readTables(file_path, [4,0,19,28.5], 4))
     
     # Change index
     df_result['index'] = range(0,len(df_result))
@@ -91,23 +103,26 @@ def readExcluded():
                 enter = i + 1
                 df_result.loc[i-1, 'PR. IDIOM  ACCESO  ESPECIALIDAD'] += ' ' + str(df_result.loc[i, 'PR. IDIOM  ACCESO  ESPECIALIDAD']) + ' ' + str(df_result.loc[i + 1, 'PR. IDIOM  ACCESO  ESPECIALIDAD'])
             else:
-                df_result.loc[i-1, 'APELLIDOS Y NOMBRE'] += str(df_result.loc[i, 'APELLIDOS Y NOMBRE'])
-                df_result.loc[i-1, 'PR. IDIOM  ACCESO  ESPECIALIDAD'] += ' ' + str(df_result.loc[i, 'PR. IDIOM  ACCESO  ESPECIALIDAD'])
+                df_result.loc[i-1, 'APELLIDOS Y NOMBRE'] += str(df_result.loc[i, 'APELLIDOS Y NOMBRE']) if str(df_result.loc[i, 'APELLIDOS Y NOMBRE']) != 'nan' else ''
+                df_result.loc[i-1, 'PR. IDIOM  ACCESO  ESPECIALIDAD'] += ' ' + str(df_result.loc[i, 'PR. IDIOM  ACCESO  ESPECIALIDAD']) if str(df_result.loc[i, 'PR. IDIOM  ACCESO  ESPECIALIDAD']) != 'nan' else ''
     
     # Drops rows misreaded
     df_result = df_result.dropna(subset=['D.N.I.'])
     
     # Separates columns misreaded by tabula and appends it the df
     df_result['ACCESO'] = df_result['PR. IDIOM  ACCESO  ESPECIALIDAD'].str.split(" ",expand=True,)[0]
-    df_result['ESPECIALIDAD'] = df_result['PR. IDIOM  ACCESO  ESPECIALIDAD'].str.split(" ",expand=True,)[1]
-    df_result['NOMBRE'] = df_result['APELLIDOS Y NOMBRE'].str.split(",",expand=True,)[1]
-    df_result['PRIMER APELLIDO'] = df_result['APELLIDOS Y NOMBRE'].str.split(",",expand=True,)[0].str.split(" ",expand=True,)[0]
-    df_result['SEGUNDO APELLIDO'] = df_result['APELLIDOS Y NOMBRE'].str.split(",",expand=True,)[0].str.split(" ",expand=True,)[1]
-
+    
+    for i in df_result.index:
+        df_result.loc[i,'ESPECIALIDAD'] = ' '.join(df_result.loc[i,'PR. IDIOM  ACCESO  ESPECIALIDAD'].split(" ")[1:])
+        df_result.loc[i,'NOMBRE'] = df_result.loc[i,'APELLIDOS Y NOMBRE'].split(",")[1].strip()
+        df_result.loc[i,'PRIMER APELLIDO'] = df_result.loc[i,'APELLIDOS Y NOMBRE'].split(",")[0].strip().split()[0]
+        df_result.loc[i,'SEGUNDO APELLIDO'] = ' '.join(df_result.loc[i,'APELLIDOS Y NOMBRE'].split(",")[0].strip().split()[1:])
     # Eliminates columns misreaded
     df_result = df_result.drop(labels=['APELLIDOS Y NOMBRE','PR. IDIOM  ACCESO  ESPECIALIDAD','Unnamed: 0','Unnamed: 1'], axis=1)
 
     # Sorts columns
     df_result = df_result[['D.N.I.','PRIMER APELLIDO','SEGUNDO APELLIDO', 'NOMBRE', 'D.A.T.', 'ACCESO','ESPECIALIDAD','L. INTER', 'EXCLUSIONES']]
+
+
     
-    return df_result
+    return (df_result,df_exlusions)
