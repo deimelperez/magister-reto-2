@@ -34,7 +34,7 @@ class Exclusion(models.Model):
         return self.name
 
 class DAT(models.Model):
-    name = models.CharField()   
+    name = models.TextField()
 
 
     def __str__(self):
@@ -52,11 +52,11 @@ class Teachers(models.Model):
     language_test = models.BooleanField()
     admitted = models.BooleanField()
 
-    specialty = models.ForeignKey('Specialty',on_delete=models.SET_NULL)
-    corp = models.ForeignKey('Corp',on_delete=models.SET_NULL)
-    access = models.ForeignKey('Access',on_delete=models.SET_NULL)
-    exclusion = models.ForeignKey('Exclusion',on_delete=models.SET_NULL)
-    dat = models.ForeignKey('DAT',on_delete=models.SET_NULL)
+    specialty = models.ForeignKey('Specialty',on_delete=models.DO_NOTHING)
+    corp = models.ForeignKey('Corp',on_delete=models.DO_NOTHING)
+    access = models.ForeignKey('Access',on_delete=models.DO_NOTHING)
+    exclusion = models.ForeignKey('Exclusion',on_delete=models.DO_NOTHING)
+    dat = models.ForeignKey('DAT',on_delete=models.DO_NOTHING)
 
 
     def __str__(self):

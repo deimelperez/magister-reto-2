@@ -28,7 +28,8 @@ def get_pdf_links():
     return pdf_links 
   
   
-def download_pdfs(pdf_links):   
+def download_pdfs():   
+    pdf_links = get_pdf_links() 
     for link in pdf_links: 
   
         '''iterate through all links in pdf_links 
@@ -55,12 +56,5 @@ def download_pdfs(pdf_links):
     print ("All pdfs downloaded!")
     return
   
-  
-if __name__ == "__main__": 
-  
-    # getting all video links 
-    pdf_links = get_pdf_links() 
-    # download all pdfs 
-    download_pdfs(pdf_links) 
 
    

@@ -12,6 +12,8 @@
 ## Install and Config
 
     pip install -r requirements.txt
+    python maanage.py makemigrations
+    python maanage.py migrate
 
 ### It's necessary to install java and added to path
 
