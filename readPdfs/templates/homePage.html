@@ -1,11 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+  <link
+    rel="stylesheet"
+    href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"
+    integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ=="
+    crossorigin="anonymous"
+  />
   <head>
     {% block title %}
     <title>Download PDFS</title>
-    <button onclick="location.href = '/reto/download';">Download PDFS</button>
-    <button onclick="location.href = '/reto/import';">Import to DB</button>
     <h3>{{ Info }}</h3>
+    <a class="btn" href="/reto/download">Download PDFS</a>
+    <a class="btn" href="/reto/import">Import to DB PDFS</a>
     {% endblock %}
   </head>
   <body></body>

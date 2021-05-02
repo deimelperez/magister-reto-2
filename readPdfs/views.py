@@ -86,8 +86,11 @@ class ImportDB(TemplateView):
                         access= Access.objects.get_or_create(code=row['ACCESO'])[0]
                         )
             t.save()
-            for ex in row['EXCLUSIONES'].split():
-                print(Exclusion.objects.get_or_create(code=ex)[0])
-                t.exclusion.add(Exclusion.objects.get_or_create(code=ex)[0])
+
+            if isinstance(row['EXCLUSIONES'], (int,float)):
+                t.exclusion.add(Exclusion.objects.get_or_create(code=row['EXCLUSIONES'])[0])
+            else:
+                for ex in row['EXCLUSIONES'].split():
+                    t.exclusion.add(Exclusion.objects.get_or_create(code=ex)[0])
         return render(request, self.template_name, context={"Info":"'Data loaded to DB'",})
     pass
