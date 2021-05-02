@@ -88,13 +88,17 @@ def readAdmitted():
 
     
     df_result = df_result.append(other=dfs)
+    # Change index
+    df_result['index'] = range(0,len(df_result))
+    df_result.set_index('index', inplace=True)
 
     return df_result
 
 
 def readExcluded():                   
     # Change the directory
-    os.chdir('./reto2/pdfs')
+    # if not './reto2/pdfs' in os.getcwd():
+    # os.chdir('./reto2/pdfs')
     path = os.getcwd()
 
     # Variable to get the exclusions description
@@ -161,5 +165,7 @@ def readExcluded():
     df1 = df1.append(other=df2)
     df1['index'] = range(0,len(df1))
     df_exclusions = df1.set_index('index')
-    
+    clear = lambda: os.system('cls')
+    clear()
+
     return (df_result,df_exclusions)
